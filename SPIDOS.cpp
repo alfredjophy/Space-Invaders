@@ -990,6 +990,8 @@ void SHIPS::behaviour()
 /****************************************************
 graphical functions
 *****************************************************/
+
+//resets window to fullscreen for the game and clears if arg is passes 
 void win(char clr)
 {
 	window(1, 1, X_max, Y_max);
