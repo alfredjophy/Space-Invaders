@@ -1,4 +1,3 @@
-#include <ncurses.h>
 
 class ObjectGraphics
 {
@@ -15,22 +14,29 @@ public:
 
             //basic ship
         case 0:
-            height = 3, width = 3;
-            char chrs[3][3] = {
-                ' ', 'v', ' ',
-                ' ', 'x', ' ',
-                'a', 'a', 'a'};
-            char clr[3][3] = {
+            const int rows = 3, cols = 5;
+            height = rows, width = cols;
+            char chrs[rows][cols] = {
+                ' ', ' ', 'x', ' ', ' ',
+                ' ', 'l', 'x', 'k', ' ',
+                'a', 'u', 'a', 't', 'a'};
+            char clr[rows][cols] = {
+                0,
                 0,
                 1,
                 0,
                 0,
-                1,
                 0,
+                3,
                 1,
-                9,
-                1};
-
+                3,
+                0,
+                2,
+                5,
+                6,
+                5,
+                2,
+            };
             for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
                 {
@@ -66,5 +72,3 @@ public:
         attroff(COLOR_PAIR(0));
     }
 };
-
-ObjectGraphics SHIP(0);
