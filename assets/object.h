@@ -12,13 +12,13 @@ private:
 
 public:
     object *f_link, *b_link;
-    object(/* args */);
+    object(float,float,int);
     ~object();
 
-    void drawObject(WINDOW *win)
+    void drawObject(WINDOW *win=stdsrc)
     {
         Obj->eraseObject(prev_y, prev_x, win);
-        Obj->drawObject(y, x, prev);
+        Obj->drawObject(y, x,win);
     }
     void getDimensions(char &h, char &w)
     {
