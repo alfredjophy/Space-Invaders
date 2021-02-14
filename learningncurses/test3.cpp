@@ -9,19 +9,23 @@
 
 int main()
 {
-    getch();
+
     Init_Screen();
     keypad(stdscr, TRUE);
     int x = 0;
     ObjectList Objs(stdscr);
     Objs.newObject(ObjectType::SHIP_BASIC, COLS / 2, LINES - 4);
+    Objs.newObject(ObjectType::SHIP_BASIC, COLS / 3, LINES / 2);
+
     int t = 1;
 
     while (x != 'q')
     {
+        //render
         Objs.drawObjects();
         refresh();
 
+        //user_input
         if (kbhit())
         {
             x = getch();
@@ -44,6 +48,7 @@ int main()
             }
         }
 
+        //update_environment
         Objs.updatePositions();
 
         delay(40);
