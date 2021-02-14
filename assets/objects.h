@@ -4,23 +4,25 @@ class object
 {
 private:
     ObjectType::OBJECT_TYPES type;
+
+    //these are actually thre [0][0] position of the matrix
+    //,..should do smthng abt it
     float x, y, prev_x, prev_y;
     float velocity_x, velocity_y;
     int height, width;
     float strength; //damage/health
-    WINDOW *win;
-
+    static WINDOW *win;
+    static int MAX_X, MAX_Y;
     ObjectGraphics *Obj;
 
 public:
     object *f_link, *b_link;
-    object(float, float, ObjectType::OBJECT_TYPES, WINDOW *w);
+    object(float, float, ObjectType::OBJECT_TYPES);
     ~object();
-
     void drawObject()
     {
-        Obj->eraseObject(prev_y, prev_x, win);
-        Obj->drawObject(y, x, win);
+        Obj->eraseObject(prev_y, prev_x, object::win);
+        Obj->drawObject(y, x, object::win);
     }
     void getDimensions(int &h, int &w)
     {
@@ -58,7 +60,7 @@ public:
     {
         return type;
     }
-    void move()
+    bool move()
     {
         //add velocity*dt to both coords
         //check boundary conditions
@@ -81,21 +83,61 @@ public:
         default:
             break;
         }
+
+        //edge cases
+
+        //TODO: take width and heigt ihnto consideration
+        if (type < 3)
+        {
+            if (!(x > 0 && x < object::MAX_X))
+            {
+                revVelocity();
+            }
+        }
+        else
+        {
+            if (!(y > 0 && y < object::MAX_Y))
+            {
+                return true; //bullets going out of view will be deleted
+            }
+        }
+
+        return false;
     }
     void revVelocity()
     {
         velocity_x *= -1;
     }
+    void changeDir(short dir)
+    {
+        if (type != ObjectType::SHIP_BASIC)
+            return;
+        else if (dir * velocity_x < 0)
+        {
+            revVelocity();
+        }
+    }
     void deleted()
     {
+        Obj->eraseObject(prev_y, prev_x, object::win);
         prev_y = y, prev_x = x;
-        Obj->eraseObject(prev_y, prev_x, win);
+        Obj->eraseObject(prev_y, prev_x, object::win);
+    }
+    static void set_statics(WINDOW *w)
+    {
+        win = w;
+        MAX_X = getmaxx(win);
+        MAX_Y = getmaxy(win);
     }
 };
 
-object::object(float xCord, float yCord, ObjectType::OBJECT_TYPES t, WINDOW *w) : f_link(nullptr), b_link(nullptr)
+WINDOW *object::win = nullptr;
+int object::MAX_X = -1;
+int object::MAX_Y = -1;
+
+object::object(float xCord, float yCord, ObjectType::OBJECT_TYPES t) : f_link(nullptr), b_link(nullptr)
 {
-    win = w;
+
     //initialize object graphic and attributes
     type = t;
     x = xCord, y = yCord;
@@ -162,6 +204,7 @@ public:
 
 ObjectList::ObjectList(WINDOW *window) : front(nullptr), back(nullptr), drawWindow(window)
 {
+    object::set_statics(window);
 }
 
 ObjectList::~ObjectList()
@@ -188,7 +231,7 @@ void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
 {
     object *newObj;
 
-    newObj = new object(x, y, type, drawWindow);
+    newObj = new object(x, y, type);
 
     if (front == nullptr)
     {
@@ -208,13 +251,33 @@ void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
 object *ObjectList::deleteObject(object *ptr)
 {
     //will implement after 1 ship trial
-    return nullptr;
+    ptr->deleted();
+    object *temp;
+    if (ptr == front)
+    {
+        front = front->f_link;
+        (ptr->f_link)->b_link = NULL;
+        temp = front;
+    }
+    else
+    {
+        (ptr->b_link)->f_link = ptr->f_link;
+        if (ptr->f_link)
+            (ptr->f_link)->b_link = ptr->b_link;
+        else
+            temp = ptr->b_link, temp->f_link = NULL, back = temp;
+
+        temp = ptr->b_link;
+    }
+    delete ptr;
+    return temp;
 }
 
 void ObjectList::updatePositions()
 {
     for (object *i = front; i; i = i->f_link)
-        i->move();
+        if (i->move())
+            i = deleteObject(i);
 }
 
 void ObjectList::drawObjects()

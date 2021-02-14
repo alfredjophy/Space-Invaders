@@ -1,13 +1,16 @@
-void Init_Screen()
+#include "colors.h"
+void init_ncurses()
 {
 
     initscr();
-    init_color(COLOR_BLACK, 0, 0, 0);
-    start_color();
-    initColorPairs();
+    nodelay(stdscr, TRUE);
+    keypad(stdscr, TRUE);
     curs_set(0);
     cbreak();
     noecho();
-    nodelay(stdscr, TRUE);
+
+    start_color();
+    init_color(COLOR_BLACK, 0, 0, 0);
+    initColorPairs();
     //raw();
 }

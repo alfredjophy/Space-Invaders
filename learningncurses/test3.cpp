@@ -1,6 +1,7 @@
 #include <ncurses.h>
 
-#include "colors.h"
+//#include "colors.h"
+
 #include "screen.h"
 #include "objects.h"
 #include "kbhit.h"
@@ -10,15 +11,12 @@
 int main()
 {
 
-    Init_Screen();
-    keypad(stdscr, TRUE);
+    init_ncurses();
     int x = 0;
     ObjectList Objs(stdscr);
     Objs.newObject(ObjectType::SHIP_BASIC, COLS / 2, LINES - 4);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, COLS / 3, LINES / 2);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, 35, 15);
-
-    int t = 1;
 
     while (x != 'q')
     {
@@ -33,18 +31,10 @@ int main()
             switch (x)
             {
             case KEY_RIGHT:
-                if (t == -1)
-                {
-                    Objs.player->revVelocity();
-                    t = 1;
-                }
+                Objs.player->changeDir(1);
                 break;
             case KEY_LEFT:
-                if (t == 1)
-                {
-                    Objs.player->revVelocity();
-                    t = -1;
-                }
+                Objs.player->changeDir(-1);
                 break;
             case ' ':
                 Objs.shoot(Objs.player);
