@@ -148,7 +148,7 @@ void ObjectList::clearList()
 {
 
     object *temp = nullptr;
-    for (object *i = front; i; front = front->f_link)
+    for (object *i = front; i; i = i->f_link)
     {
         delete temp;
         temp = i;
@@ -166,11 +166,14 @@ void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
     newObj = new object(x, y, type, drawWindow);
 
     if (front == nullptr)
+    {
         front = back = newObj;
-
-    back->f_link = newObj;
-    newObj->b_link = back;
-
+    }
+    else
+    {
+        back->f_link = newObj;
+        newObj->b_link = back;
+    }
     back = newObj;
 
     if (type == ObjectType::SHIP_BASIC) //replace with player
@@ -185,12 +188,12 @@ object *ObjectList::deleteObject(object *ptr)
 
 void ObjectList::updatePositions()
 {
-    for (object *i = front; i; front = front->f_link)
+    for (object *i = front; i; i = i->f_link)
         i->move();
 }
 
 void ObjectList::drawObjects()
 {
-    for (object *i = front; i; front = front->f_link)
+    for (object *i = front; i; i = i->f_link)
         i->drawObject();
 }

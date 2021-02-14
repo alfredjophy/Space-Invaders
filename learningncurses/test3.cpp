@@ -9,19 +9,17 @@
 
 int main()
 {
-    printf("$1\n");
     getch();
     Init_Screen();
     keypad(stdscr, TRUE);
-    printw("$2\n");
     int x = 0;
     ObjectList Objs(stdscr);
     Objs.newObject(ObjectType::SHIP_BASIC, COLS / 2, LINES - 4);
     int t = 1;
 
-    while (x!='q')
+    while (x != 'q')
     {
-        Objs.player->drawObject();
+        Objs.drawObjects();
         refresh();
 
         if (kbhit())
@@ -46,9 +44,7 @@ int main()
             }
         }
 
-        // printw("loop\n");
-
-        Objs.player->move();
+        Objs.updatePositions();
 
         delay(40);
     }
