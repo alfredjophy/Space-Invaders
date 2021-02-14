@@ -94,23 +94,23 @@ public:
         w = width;
     }
 
-    void drawObject(int y, int x, WINDOW *win = stdscr)
+    void drawObject(int y, int x, WINDOW *win)
     {
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
             {
                 wmove(win, y + i, x + j);
-                attron(COLOR_PAIR(objectColors[i][j]));
+                wattron(win, COLOR_PAIR(objectColors[i][j]));
                 waddch(win, NCURSES_ACS(objectCharacters[i][j]));
-                attroff(COLOR_PAIR(objectColors[i][j]));
+                wattroff(win, COLOR_PAIR(objectColors[i][j]));
             }
     }
-    void eraseObject(int y, int x, WINDOW *win = stdscr)
+    void eraseObject(int y, int x, WINDOW *win)
     {
-        attron(COLOR_PAIR(0));
+        wattron(win, COLOR_PAIR(0));
         for (int i = 0; i < height; i++)
             mvwhline(win, y + i, x, ' ', width);
-        attroff(COLOR_PAIR(0));
+        wattroff(win, COLOR_PAIR(0));
     }
 };
 
