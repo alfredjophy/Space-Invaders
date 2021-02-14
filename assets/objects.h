@@ -85,11 +85,14 @@ public:
     }
 };
 
-object::object(float x, float y, ObjectType::OBJECT_TYPES t, WINDOW *w) : f_link(nullptr), b_link(nullptr)
+object::object(float xCord, float yCord, ObjectType::OBJECT_TYPES t, WINDOW *w) : f_link(nullptr), b_link(nullptr)
 {
     win = w;
     //initialize object graphic and attributes
     type = t;
+    x = xCord, y = yCord;
+    prev_x = xCord, prev_y = yCord;
+
     switch (type)
     {
     case ObjectType::SHIP_BASIC:
@@ -122,10 +125,12 @@ private:
     WINDOW *drawWindow;
 
 public:
+    object *player;
     ObjectList(WINDOW *);
     void newObject(ObjectType::OBJECT_TYPES, float, float);
     object *deleteObject(object *ptr);
     void updatePositions();
+    void drawObjects();
     void clearList();
     ~ObjectList();
 };
@@ -143,29 +148,33 @@ void ObjectList::clearList()
 {
 
     object *temp = nullptr;
-    for (object *i = front; front; front = front->f_link)
+    for (object *i = front; i; front = front->f_link)
     {
         delete temp;
         temp = i;
     }
 
     //JUST TO MAKE SURE ,lol
-    delete front, delete back;
+    // delete front, delete back;
     front = back = nullptr;
 }
 
 void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
 {
-    object *newObj = new object(x, y, type, drawWindow);
+    object *newObj;
 
-    if (front = nullptr)
-        front = newObj;
-    else
-    {
-        back->f_link = newObj;
-        newObj->b_link = back;
-    }
+    newObj = new object(x, y, type, drawWindow);
+
+    if (front == nullptr)
+        front = back = newObj;
+
+    back->f_link = newObj;
+    newObj->b_link = back;
+
     back = newObj;
+
+    if (type == ObjectType::SHIP_BASIC) //replace with player
+        player = newObj;
 }
 
 object *ObjectList::deleteObject(object *ptr)
@@ -176,6 +185,12 @@ object *ObjectList::deleteObject(object *ptr)
 
 void ObjectList::updatePositions()
 {
-    for (object *i = front; front; front = front->f_link)
+    for (object *i = front; i; front = front->f_link)
         i->move();
+}
+
+void ObjectList::drawObjects()
+{
+    for (object *i = front; i; front = front->f_link)
+        i->drawObject();
 }

@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 
-#include "objects.h"
+#include "objectsGraphics.h"
 #include "colors.h"
 #include "screen.h"
 #define delay(ms) usleep(ms * 1000)
