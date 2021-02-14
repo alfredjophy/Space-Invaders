@@ -19,11 +19,10 @@ int main()
     Objs.newObject(ObjectType::SHIP_BASIC, COLS / 2, LINES - 4);
     int t = 1;
 
-    while (x != (int)'q')
+    while (x!='q')
     {
         Objs.player->drawObject();
         refresh();
-        Objs.player->move();
 
         if (kbhit())
         {
@@ -32,14 +31,25 @@ int main()
             {
             case KEY_RIGHT:
                 if (t == -1)
-                    Objs.player->revVelocity(), t = 1;
+                {
+                    Objs.player->revVelocity();
+                    t = 1;
+                }
                 break;
             case KEY_LEFT:
                 if (t == 1)
-                    Objs.player->revVelocity(), t = -1;
+                {
+                    Objs.player->revVelocity();
+                    t = -1;
+                }
                 break;
             }
         }
+
+        // printw("loop\n");
+
+        Objs.player->move();
+
         delay(40);
     }
     endwin();

@@ -6,5 +6,8 @@ void Init_Screen()
     start_color();
     initColorPairs();
     curs_set(0);
+    //cbreak();
     noecho();
+    nodelay(stdscr, TRUE);
+    //raw();
 }

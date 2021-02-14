@@ -153,10 +153,10 @@ void ObjectList::clearList()
         delete temp;
         temp = i;
     }
-
+    delete temp;
     //JUST TO MAKE SURE ,lol
     // delete front, delete back;
-    front = back = nullptr;
+    front = back = player = nullptr;
 }
 
 void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
