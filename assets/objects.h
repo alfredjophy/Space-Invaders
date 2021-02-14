@@ -69,6 +69,14 @@ public:
             prev_x = x;
             x += velocity_x;
             break;
+        case ObjectType::SHIP_ENEMY_1:
+            prev_x = x;
+            x += velocity_x;
+            break;
+        case ObjectType::BULLET_1:
+            prev_y = y;
+            y += velocity_y;
+            break;
 
         default:
             break;
@@ -101,6 +109,18 @@ object::object(float xCord, float yCord, ObjectType::OBJECT_TYPES t, WINDOW *w) 
         strength = 10;
         Obj = &SHIP_BASIC;
         break;
+    case ObjectType::SHIP_ENEMY_1:
+        velocity_x = 0.25;
+        velocity_y = 0;
+        strength = 10;
+        Obj = &SHIP_ENEMY_1;
+        break;
+    case ObjectType::BULLET_1:
+        velocity_x = 0;
+        velocity_y = -1;
+        strength = 10;
+        Obj = &BULLET_1;
+        break;
 
     default:
         Obj = nullptr;
@@ -132,6 +152,11 @@ public:
     void updatePositions();
     void drawObjects();
     void clearList();
+    void shoot(object *ship)
+    {
+        float x = ship->getx(), y = ship->gety();
+        newObject(ObjectType::BULLET_1, x, y);
+    }
     ~ObjectList();
 };
 
@@ -182,7 +207,7 @@ void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
 
 object *ObjectList::deleteObject(object *ptr)
 {
-    //will implemet after 1 ship trial
+    //will implement after 1 ship trial
     return nullptr;
 }
 

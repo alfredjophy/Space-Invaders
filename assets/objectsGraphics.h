@@ -4,7 +4,9 @@ namespace ObjectType
     {
         SHIP_BASIC = 0,
         SHIP_ENEMY_1 = 1,
-        SHIP_ENEMY_2 = 2
+        SHIP_ENEMY_2 = 2,
+        BULLET_1 = 3
+
     };
 }
 class ObjectGraphics
@@ -22,6 +24,7 @@ public:
 
             //basic ship
         case ObjectType::SHIP_BASIC:
+        {
             const int rows = 3, cols = 5;
             height = rows, width = cols;
             char chrs[rows][cols] = {
@@ -51,7 +54,36 @@ public:
                     objectCharacters[i][j] = chrs[i][j];
                     objectColors[i][j] = clr[i][j];
                 }
-            break;
+        }
+        break;
+        case ObjectType::SHIP_ENEMY_1:
+        {
+            const int cols = 3, rows = 2;
+            height = rows, width = cols;
+            char chrs[rows][cols] = {
+                'a', 'n', 'a',
+                ' ', 'x', ' '};
+            char clr[rows][cols] = {
+                4, 5, 4,
+                0, 1, 0};
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
+                {
+                    objectCharacters[i][j] = chrs[i][j];
+                    objectColors[i][j] = clr[i][j];
+                }
+        }
+        break;
+        case ObjectType::BULLET_1:
+        {
+            const int cols = 1, rows = 1;
+            height = rows, width = cols;
+            char chr = '`';
+            char clr = 1;
+            objectCharacters[0][0] = chr;
+            objectColors[0][0] = clr;
+        }
+        break;
         }
     }
 
@@ -82,3 +114,5 @@ public:
 };
 
 ObjectGraphics SHIP_BASIC(ObjectType::SHIP_BASIC);
+ObjectGraphics SHIP_ENEMY_1(ObjectType::SHIP_ENEMY_1);
+ObjectGraphics BULLET_1(ObjectType::BULLET_1);
