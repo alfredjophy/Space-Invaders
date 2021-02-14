@@ -17,8 +17,6 @@ int main()
     Objs.newObject(ObjectType::SHIP_BASIC, COLS / 2, LINES - 4);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, COLS / 3, LINES / 2);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, 35, 15);
-    //Objs.newObject(ObjectType::SHIP_ENEMY_1, 15, 5);
-    //Objs.newObject(ObjectType::SHIP_ENEMY_1, 10, 22);
 
     int t = 1;
 
