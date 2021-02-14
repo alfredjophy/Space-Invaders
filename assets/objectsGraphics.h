@@ -9,6 +9,7 @@ namespace ObjectType
 
     };
 }
+
 class ObjectGraphics
 {
 
