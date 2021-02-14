@@ -1,3 +1,12 @@
+namespace ObjectType
+{
+    enum OBJECT_TYPES
+    {
+        SHIP_BASIC = 0,
+        SHIP_ENEMY_1 = 1,
+        SHIP_ENEMY_2 = 2
+    };
+}
 class ObjectGraphics
 {
 
@@ -6,13 +15,13 @@ class ObjectGraphics
     char objectColors[5][5];
 
 public:
-    ObjectGraphics(int type)
+    ObjectGraphics(ObjectType::OBJECT_TYPES type)
     {
         switch (type)
         {
 
             //basic ship
-        case 0:
+        case ObjectType::SHIP_BASIC:
             const int rows = 3, cols = 5;
             height = rows, width = cols;
             char chrs[rows][cols] = {
@@ -46,7 +55,7 @@ public:
         }
     }
 
-    void getDimensions(char &h, char &w)
+    void getDimensions(int &h, int &w)
     {
         h = height;
         w = width;
@@ -71,3 +80,5 @@ public:
         attroff(COLOR_PAIR(0));
     }
 };
+
+ObjectGraphics SHIP_BASIC(ObjectType::SHIP_BASIC);

@@ -1,24 +1,22 @@
 #include <ncurses.h>
 #include <unistd.h>
 
-
-#include "objectsGraphics.h"
+#include "objects.h"
 #include "colors.h"
 #include "screen.h"
-#define delay(ms) usleep(ms*1000)
+#define delay(ms) usleep(ms * 1000)
 
 int main()
 {
     Init_Screen();
     keypad(stdscr, TRUE);
-    ObjectGraphics SHIP(0);
     int ch = 'y';
     int x = 10, y = 10;
-    SHIP.drawObject(y, x);
+    SHIP_BASIC.drawObject(y, x);
     refresh();
     while ((ch = getch()) && ch != 'q')
     {
-        SHIP.eraseObject(y, x);
+        SHIP_BASIC.eraseObject(y, x);
         switch (ch)
         {
         case KEY_LEFT:
@@ -34,9 +32,8 @@ int main()
             ++x;
             break;
         }
-        SHIP.drawObject(y, x);
+        SHIP_BASIC.drawObject(y, x);
     }
-
 
     // for (int i = 0; i < COLS; ++i)
     // {
