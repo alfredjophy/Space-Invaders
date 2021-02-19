@@ -130,6 +130,7 @@ public:
     }
     void interact(object *ob1, object *ob2)
     {
+        
     }
 };
 
