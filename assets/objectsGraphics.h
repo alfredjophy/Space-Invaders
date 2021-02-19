@@ -99,7 +99,7 @@ public:
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
             {
-                wmove(win, y + i, x + j);
+                wmove(win, y + i - height / 2, x + j - width / 2);
                 wattron(win, COLOR_PAIR(objectColors[i][j]));
                 waddch(win, NCURSES_ACS(objectCharacters[i][j]));
                 wattroff(win, COLOR_PAIR(objectColors[i][j]));
@@ -109,7 +109,7 @@ public:
     {
         wattron(win, COLOR_PAIR(0));
         for (int i = 0; i < height; i++)
-            mvwhline(win, y + i, x, ' ', width);
+            mvwhline(win, y + i - height / 2, x - width / 2, ' ', width);
         wattroff(win, COLOR_PAIR(0));
     }
 };

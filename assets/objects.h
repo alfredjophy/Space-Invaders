@@ -86,17 +86,16 @@ public:
 
         //edge cases
 
-        //TODO: take width and heigt ihnto consideration
         if (type < 3)
         {
-            if (!(x > 0 && x < object::MAX_X))
+            if (!(x - width / 2 > 0 && x + width / 2 < object::MAX_X))
             {
                 revVelocity();
             }
         }
         else
         {
-            if (!(y > 0 && y < object::MAX_Y))
+            if (!(y - height / 2 > 0 && y + height / 2 < object::MAX_Y))
             {
                 return true; //bullets going out of view will be deleted
             }
@@ -128,6 +127,9 @@ public:
         win = w;
         MAX_X = getmaxx(win);
         MAX_Y = getmaxy(win);
+    }
+    void interact(object *ob1, object *ob2)
+    {
     }
 };
 
