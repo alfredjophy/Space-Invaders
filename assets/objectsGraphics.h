@@ -5,7 +5,8 @@ namespace ObjectType
         SHIP_BASIC = 0,
         SHIP_ENEMY_1 = 1,
         SHIP_ENEMY_2 = 2,
-        BULLET_1 = 3
+        BULLET_1 = 3,
+        BULLET_2 = 4
 
     };
 }

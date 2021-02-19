@@ -128,8 +128,7 @@ public:
         MAX_X = getmaxx(win);
         MAX_Y = getmaxy(win);
     }
-    void interact(object *ob1, object *ob2)
-    {
+    void interact(object* obj){
         
     }
 };
@@ -281,6 +280,7 @@ void ObjectList::updatePositions()
     for (object *i = front; i; i = i->f_link)
         if (i->move())
             i = deleteObject(i);
+    //interaction is needed
 }
 
 void ObjectList::drawObjects()
