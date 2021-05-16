@@ -1,10 +1,9 @@
 #include <ncurses.h>
 
-//#include "colors.h"
-
 #include "colors.h"
 #include "objects.h"
 #include "kbhit.h"
+
 
 #define delay(ms) usleep(ms * 1000)
 
@@ -27,12 +26,12 @@ int main()
 
     WINDOW *game = newwin(LINES - 2, COLS / 2, 1, COLS / 4);
     //game=stdscr;
-    box(game, 0, 0);
+    //box(game, 0, 0);
 
     ObjectList Objs(game);
     Objs.newObject(ObjectType::SHIP_BASIC, 20, 20);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, 60, 10);
-    Objs.newObject(ObjectType::SHIP_ENEMY_1, 35, 15);
+    Objs.newObject(ObjectType::SHIP_ENEMY_1, 35, 10);
 
     while (x != 'q')
     {

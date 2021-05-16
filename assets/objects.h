@@ -1,4 +1,15 @@
 #include "objectsGraphics.h"
+#include <iostream>
+#include <math.h>
+
+
+
+bool _rangeof(float x1, float x, float x2)
+{
+    if (x1 <= x && x <= x2)
+        return true;
+    return false;
+}
 
 class object
 {
@@ -26,7 +37,8 @@ public:
     }
     void getDimensions(int &h, int &w)
     {
-        Obj->getDimensions(h, w);
+        h = height;
+        w = width;
     }
     float getStrength()
     {
@@ -84,13 +96,16 @@ public:
             break;
         }
 
-        //edge cases
+        //edge collison
 
         if (type < 3)
         {
-            if (!(x - width / 2 > 0 && x + width / 2 < object::MAX_X))
+            if (!(x - width / 2 > 0 && x + width / 2< object::MAX_X-1))
             {
                 revVelocity();
+                std::cout<<x<<" "<<y;
+                int i=0;
+                
             }
         }
         else
@@ -128,8 +143,28 @@ public:
         MAX_X = getmaxx(win);
         MAX_Y = getmaxy(win);
     }
-    void interact(object* obj){
+    void interact(object *obj)
+    {
+        //check coordinates and dimensions for collisions
         
+        float x1 = this->x;
+        float y1 = this->y;
+        int h1 = this->height;
+        int w1 = this->width;
+        float d1 = sqrt(h1 * h1 + w1 * w1);
+        float x2 = obj->getx();
+        float y2 = obj->gety();
+        int w2, h2;
+        obj->getDimensions(h2, w2);
+        float d2 = sqrt(h2 * h2 + w2 * w2);
+
+        //if distance between centres < sum of diagonals
+        if(sqrt(pow(x2-x1,2)+pow(y2-y1,2))<=d1/2+d2/2 )
+        {
+            //std::cout<<"coll";
+            //this->revVelocity();
+            obj->revVelocity();
+        }
     }
 };
 
@@ -278,9 +313,14 @@ object *ObjectList::deleteObject(object *ptr)
 void ObjectList::updatePositions()
 {
     for (object *i = front; i; i = i->f_link)
+    {
         if (i->move())
             i = deleteObject(i);
+    }
     //interaction is needed
+    for (object *i = front; i; i = i->f_link)
+        for (object *j = front; j; j = j->f_link)
+            if(i!=j)i->interact(j);
 }
 
 void ObjectList::drawObjects()
