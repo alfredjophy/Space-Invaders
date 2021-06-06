@@ -30,9 +30,9 @@ int main()
 
     ObjectList Objs(game);
     Objs.newObject(ObjectType::SHIP_BASIC, 20, 20);
-    Objs.newObject(ObjectType::SHIP_ENEMY_1, 60, 10);
+    //Objs.newObject(ObjectType::SHIP_ENEMY_1, 60, 10);
     Objs.newObject(ObjectType::SHIP_ENEMY_1, 35, 10);
-
+    Objs.newObject(ObjectType::SHIP_ENEMY_1, 14, 10);
     while (x != 'q')
     {
         //render

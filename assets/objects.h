@@ -103,7 +103,7 @@ public:
             if (!(x - width / 2 > 0 && x + width / 2< object::MAX_X-1))
             {
                 revVelocity();
-                std::cout<<x<<" "<<y;
+                //std::cout<<x<<" "<<y;
                 int i=0;
                 
             }
@@ -315,12 +315,15 @@ void ObjectList::updatePositions()
     for (object *i = front; i; i = i->f_link)
     {
         if (i->move())
-            i = deleteObject(i);
-    }
+        {   i = deleteObject(i);
+            continue;
+        }
+    //}
     //interaction is needed
-    for (object *i = front; i; i = i->f_link)
+    //for (object *i = front; i; i = i->f_link)
         for (object *j = front; j; j = j->f_link)
             if(i!=j)i->interact(j);
+    }       
 }
 
 void ObjectList::drawObjects()
