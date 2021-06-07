@@ -6,166 +6,166 @@
 
 bool _rangeof(float x1, float x, float x2)
 {
-    if (x1 <= x && x <= x2)
-        return true;
-    return false;
+        if (x1 <= x && x <= x2)
+                return true;
+        return false;
 }
 
 class object
 {
-private:
-    ObjectType::OBJECT_TYPES type;
+        private:
+                ObjectType::OBJECT_TYPES type;
 
-    //these are actually thre [0][0] position of the matrix
-    //,..should do smthng abt it
-    float x, y, prev_x, prev_y;
-    float velocity_x, velocity_y;
-    int height, width;
-    float strength; //damage/health
-    static WINDOW *win;
-    static int MAX_X, MAX_Y;
-    ObjectGraphics *Obj;
+                //these are actually thre [0][0] position of the matrix
+                //,..should do smthng abt it
+                float x, y, prev_x, prev_y;
+                float velocity_x, velocity_y;
+                int height, width;
+                float strength; //damage/health
+                static WINDOW *win;
+                static int MAX_X, MAX_Y;
+                ObjectGraphics *Obj;
 
-public:
-    object *f_link, *b_link;
-    object(float, float, ObjectType::OBJECT_TYPES);
-    ~object();
-    void drawObject()
-    {
-        Obj->eraseObject(prev_y, prev_x, object::win);
-        Obj->drawObject(y, x, object::win);
-    }
-    void getDimensions(int &h, int &w)
-    {
-        h = height;
-        w = width;
-    }
-    float getStrength()
-    {
-        return strength;
-    }
-    float getx()
-    {
-        return x;
-    }
-    float gety()
-    {
-        return y;
-    }
-    float getPrev_x()
-    {
-        return prev_x;
-    }
-    float getPrev_y()
-    {
-        return prev_y;
-    }
-    float getVelocity_x()
-    {
-        return velocity_x;
-    }
-    float getVelocity_y()
-    {
-        return velocity_y;
-    }
-    ObjectType::OBJECT_TYPES getType()
-    {
-        return type;
-    }
-    bool move()
-    {
-        //add velocity*dt to both coords
-        //check boundary conditions
+        public:
+                object *f_link, *b_link;
+                object(float, float, ObjectType::OBJECT_TYPES);
+                ~object();
+                void drawObject()
+                {
+                        Obj->eraseObject(prev_y, prev_x, object::win);
+                        Obj->drawObject(y, x, object::win);
+                }
+                void getDimensions(int &h, int &w)
+                {
+                        h = height;
+                        w = width;
+                }
+                float getStrength()
+                {
+                        return strength;
+                }
+                float getx()
+                {
+                        return x;
+                }
+                float gety()
+                {
+                        return y;
+                }
+                float getPrev_x()
+                {
+                        return prev_x;
+                }
+                float getPrev_y()
+                {
+                        return prev_y;
+                }
+                float getVelocity_x()
+                {
+                        return velocity_x;
+                }
+                float getVelocity_y()
+                {
+                        return velocity_y;
+                }
+                ObjectType::OBJECT_TYPES getType()
+                {
+                        return type;
+                }
+                bool move()
+                {
+                        //add velocity*dt to both coords
+                        //check boundary conditions
 
-        switch (type)
-        {
-        case ObjectType::SHIP_BASIC:
-            prev_x = x;
-            x += velocity_x;
-            break;
-        case ObjectType::SHIP_ENEMY_1:
-            prev_x = x;
-            x += velocity_x;
-            break;
-        case ObjectType::BULLET_1:
-            prev_y = y;
-            y += velocity_y;
-            break;
+                        switch (type)
+                        {
+                                case ObjectType::SHIP_BASIC:
+                                        prev_x = x;
+                                        x += velocity_x;
+                                        break;
+                                case ObjectType::SHIP_ENEMY_1:
+                                        prev_x = x;
+                                        x += velocity_x;
+                                        break;
+                                case ObjectType::BULLET_1:
+                                        prev_y = y;
+                                        y += velocity_y;
+                                        break;
 
-        default:
-            break;
-        }
+                                default:
+                                        break;
+                        }
 
-        //edge collison
+                        //edge collison
 
-        if (type < 3)
-        {
-            if (!(x - width / 2 > 0 && x + width / 2< object::MAX_X-1))
-            {
-                revVelocity();
-                //std::cout<<x<<" "<<y;
-                int i=0;
-                
-            }
-        }
-        else
-        {
-            if (!(y - height / 2 > 0 && y + height / 2 < object::MAX_Y))
-            {
-                return true; //bullets going out of view will be deleted
-            }
-        }
+                        if (type < 3)
+                        {
+                                if (!(x - width / 2 > 0 && x + width / 2< object::MAX_X-1))
+                                {
+                                        revVelocity();
+                                        //std::cout<<x<<" "<<y;
+                                        int i=0;
 
-        return false;
-    }
-    void revVelocity()
-    {
-        velocity_x *= -1;
-    }
-    void changeDir(short dir)
-    {
-        if (type != ObjectType::SHIP_BASIC)
-            return;
-        else if (dir * velocity_x < 0)
-        {
-            revVelocity();
-        }
-    }
-    void deleted()
-    {
-        Obj->eraseObject(prev_y, prev_x, object::win);
-        prev_y = y, prev_x = x;
-        Obj->eraseObject(prev_y, prev_x, object::win);
-    }
-    static void set_statics(WINDOW *w)
-    {
-        win = w;
-        MAX_X = getmaxx(win);
-        MAX_Y = getmaxy(win);
-    }
-    void interact(object *obj)
-    {
-        //check coordinates and dimensions for collisions
-        
-        float x1 = this->x;
-        float y1 = this->y;
-        int h1 = this->height;
-        int w1 = this->width;
-        float d1 = sqrt(h1 * h1 + w1 * w1);
-        float x2 = obj->getx();
-        float y2 = obj->gety();
-        int w2, h2;
-        obj->getDimensions(h2, w2);
-        float d2 = sqrt(h2 * h2 + w2 * w2);
+                                }
+                        }
+                        else
+                        {
+                                if (!(y - height / 2 > 0 && y + height / 2 < object::MAX_Y))
+                                {
+                                        return true; //bullets going out of view will be deleted
+                                }
+                        }
 
-        //if distance between centres < sum of diagonals
-        if(sqrt(pow(x2-x1,2)+pow(y2-y1,2))<=d1/2+d2/2 )
-        {
-            //std::cout<<"coll";
-            //this->revVelocity();
-            obj->revVelocity();
-        }
-    }
+                        return false;
+                }
+                void revVelocity()
+                {
+                        velocity_x *= -1;
+                }
+                void changeDir(short dir)
+                {
+                        if (type != ObjectType::SHIP_BASIC)
+                                return;
+                        else if (dir * velocity_x < 0)
+                        {
+                                revVelocity();
+                        }
+                }
+                void deleted()
+                {
+                        Obj->eraseObject(prev_y, prev_x, object::win);
+                        prev_y = y, prev_x = x;
+                        Obj->eraseObject(prev_y, prev_x, object::win);
+                }
+                static void set_statics(WINDOW *w)
+                {
+                        win = w;
+                        MAX_X = getmaxx(win);
+                        MAX_Y = getmaxy(win);
+                }
+                void interact(object *obj)
+                {
+                        //check coordinates and dimensions for collisions
+
+                        float x1 = this->x;
+                        float y1 = this->y;
+                        int h1 = this->height;
+                        int w1 = this->width;
+                        float d1 = sqrt(h1 * h1 + w1 * w1);
+                        float x2 = obj->getx();
+                        float y2 = obj->gety();
+                        int w2, h2;
+                        obj->getDimensions(h2, w2);
+                        float d2 = sqrt(h2 * h2 + w2 * w2);
+
+                        //if distance between centres < sum of diagonals
+                        if(sqrt(pow(x2-x1,2)+pow(y2-y1,2))<=d1/2+d2/2 )
+                        {
+                                //std::cout<<"coll";
+                                //this->revVelocity();
+                                obj->revVelocity();
+                        }
+                }
 };
 
 WINDOW *object::win = nullptr;
@@ -175,159 +175,159 @@ int object::MAX_Y = -1;
 object::object(float xCord, float yCord, ObjectType::OBJECT_TYPES t) : f_link(nullptr), b_link(nullptr)
 {
 
-    //initialize object graphic and attributes
-    type = t;
-    x = xCord, y = yCord;
-    prev_x = xCord, prev_y = yCord;
+        //initialize object graphic and attributes
+        type = t;
+        x = xCord, y = yCord;
+        prev_x = xCord, prev_y = yCord;
 
-    switch (type)
-    {
-    case ObjectType::SHIP_BASIC:
-        velocity_x = 1;
-        velocity_y = 0;
-        strength = 10;
-        Obj = &SHIP_BASIC;
-        break;
-    case ObjectType::SHIP_ENEMY_1:
-        velocity_x = 0.25;
-        velocity_y = 0;
-        strength = 10;
-        Obj = &SHIP_ENEMY_1;
-        break;
-    case ObjectType::BULLET_1:
-        velocity_x = 0;
-        velocity_y = -1;
-        strength = 10;
-        Obj = &BULLET_1;
-        break;
+        switch (type)
+        {
+                case ObjectType::SHIP_BASIC:
+                        velocity_x = 1;
+                        velocity_y = 0;
+                        strength = 10;
+                        Obj = &SHIP_BASIC;
+                        break;
+                case ObjectType::SHIP_ENEMY_1:
+                        velocity_x = 0.25;
+                        velocity_y = 0;
+                        strength = 10;
+                        Obj = &SHIP_ENEMY_1;
+                        break;
+                case ObjectType::BULLET_1:
+                        velocity_x = 0;
+                        velocity_y = -1;
+                        strength = 10;
+                        Obj = &BULLET_1;
+                        break;
 
-    default:
-        Obj = nullptr;
-        break;
-    }
+                default:
+                        Obj = nullptr;
+                        break;
+        }
 
-    //get dimensions
-    Obj->getDimensions(height, width);
+        //get dimensions
+        Obj->getDimensions(height, width);
 }
 
 object::~object()
 {
-    //clear memory
-    f_link = b_link = nullptr;
-    Obj = nullptr;
+        //clear memory
+        f_link = b_link = nullptr;
+        Obj = nullptr;
 }
 
 class ObjectList
 {
-private:
-    object *front, *back; //front will always point to player ie SHIP_BASIC
-    WINDOW *drawWindow;
+        private:
+                object *front, *back; //front will always point to player ie SHIP_BASIC
+                WINDOW *drawWindow;
 
-public:
-    object *player;
-    ObjectList(WINDOW *);
-    void newObject(ObjectType::OBJECT_TYPES, float, float);
-    object *deleteObject(object *ptr);
-    void updatePositions();
-    void drawObjects();
-    void clearList();
-    void shoot(object *ship)
-    {
-        float x = ship->getx(), y = ship->gety();
-        newObject(ObjectType::BULLET_1, x, y);
-    }
-    ~ObjectList();
+        public:
+                object *player;
+                ObjectList(WINDOW *);
+                void newObject(ObjectType::OBJECT_TYPES, float, float);
+                object *deleteObject(object *ptr);
+                void updatePositions();
+                void drawObjects();
+                void clearList();
+                void shoot(object *ship)
+                {
+                        float x = ship->getx(), y = ship->gety();
+                        newObject(ObjectType::BULLET_1, x, y);
+                }
+                ~ObjectList();
 };
 
 ObjectList::ObjectList(WINDOW *window) : front(nullptr), back(nullptr), drawWindow(window)
 {
-    object::set_statics(window);
+        object::set_statics(window);
 }
 
 ObjectList::~ObjectList()
 {
-    clearList();
+        clearList();
 }
 
 void ObjectList::clearList()
 {
 
-    object *temp = nullptr;
-    for (object *i = front; i; i = i->f_link)
-    {
+        object *temp = nullptr;
+        for (object *i = front; i; i = i->f_link)
+        {
+                delete temp;
+                temp = i;
+        }
         delete temp;
-        temp = i;
-    }
-    delete temp;
-    //JUST TO MAKE SURE ,lol
-    // delete front, delete back;
-    front = back = player = nullptr;
+        //JUST TO MAKE SURE ,lol
+        // delete front, delete back;
+        front = back = player = nullptr;
 }
 
 void ObjectList::newObject(ObjectType::OBJECT_TYPES type, float x, float y)
 {
-    object *newObj;
+        object *newObj;
 
-    newObj = new object(x, y, type);
+        newObj = new object(x, y, type);
 
-    if (front == nullptr)
-    {
-        front = back = newObj;
-    }
-    else
-    {
-        back->f_link = newObj;
-        newObj->b_link = back;
-    }
-    back = newObj;
+        if (front == nullptr)
+        {
+                front = back = newObj;
+        }
+        else
+        {
+                back->f_link = newObj;
+                newObj->b_link = back;
+        }
+        back = newObj;
 
-    if (type == ObjectType::SHIP_BASIC) //replace with player
-        player = newObj;
+        if (type == ObjectType::SHIP_BASIC) //replace with player
+                player = newObj;
 }
 
 object *ObjectList::deleteObject(object *ptr)
 {
-    //will implement after 1 ship trial
-    ptr->deleted();
-    object *temp;
-    if (ptr == front)
-    {
-        front = front->f_link;
-        (ptr->f_link)->b_link = NULL;
-        temp = front;
-    }
-    else
-    {
-        (ptr->b_link)->f_link = ptr->f_link;
-        if (ptr->f_link)
-            (ptr->f_link)->b_link = ptr->b_link;
+        //will implement after 1 ship trial
+        ptr->deleted();
+        object *temp;
+        if (ptr == front)
+        {
+                front = front->f_link;
+                (ptr->f_link)->b_link = NULL;
+                temp = front;
+        }
         else
-            temp = ptr->b_link, temp->f_link = NULL, back = temp;
+        {
+                (ptr->b_link)->f_link = ptr->f_link;
+                if (ptr->f_link)
+                        (ptr->f_link)->b_link = ptr->b_link;
+                else
+                        temp = ptr->b_link, temp->f_link = NULL, back = temp;
 
-        temp = ptr->b_link;
-    }
-    delete ptr;
-    return temp;
+                temp = ptr->b_link;
+        }
+        delete ptr;
+        return temp;
 }
 
 void ObjectList::updatePositions()
 {
-    for (object *i = front; i; i = i->f_link)
-    {
-        if (i->move())
-        {   i = deleteObject(i);
-            continue;
-        }
-    //}
-    //interaction is needed
-    //for (object *i = front; i; i = i->f_link)
-        for (object *j = front; j; j = j->f_link)
-            if(i!=j)i->interact(j);
-    }       
+        for (object *i = front; i; i = i->f_link)
+        {
+                if (i->move())
+                {   i = deleteObject(i);
+                        continue;
+                }
+                //}
+                //interaction is needed
+                //for (object *i = front; i; i = i->f_link)
+                for (object *j = front; j; j = j->f_link)
+                        if(i!=j)i->interact(j);
+}       
 }
 
 void ObjectList::drawObjects()
 {
-    for (object *i = front; i; i = i->f_link)
-        i->drawObject();
+        for (object *i = front; i; i = i->f_link)
+                i->drawObject();
 }
