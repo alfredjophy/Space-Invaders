@@ -13,7 +13,6 @@ enum OBJECT_TYPES
 
 };
 
-
 class ObjectGraphics
 {
         char height, width;

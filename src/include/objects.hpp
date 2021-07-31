@@ -3,6 +3,7 @@
 
 #include "objectsGraphics.hpp"
 #include "math_additional.hpp"
+#include <math.h>
 
 class ObjectList
 {
@@ -18,6 +19,7 @@ class ObjectList
                         float velocity_x, velocity_y;
                         int height, width;
                         float strength; //damage/health
+                        //TODO move the static variable to parent class
                         static WINDOW *win;
                         static int MAX_X, MAX_Y;
                         ObjectGraphics *Obj;

@@ -1,6 +1,64 @@
 #include "objects.hpp"
+                                                                       
+ObjectGraphics _SHIP_BASIC(OBJECT_TYPES::SHIP_BASIC);
+ObjectGraphics _SHIP_ENEMY_1(OBJECT_TYPES::SHIP_ENEMY_1);
+ObjectGraphics _BULLET_1(OBJECT_TYPES::BULLET_1);
 
 //object method definitions
+ObjectList::object::object(float xCord, float yCord, OBJECT_TYPES t) : f_link(nullptr), b_link(nullptr)
+{
+        //initialize object graphic and attributes
+        type = t;
+        x = xCord, y = yCord;
+        prev_x = xCord, prev_y = yCord;
+
+        switch (type)
+        {
+                case SHIP_BASIC:
+                        velocity_x = 1;
+                        velocity_y = 0;
+                        strength = 10;
+                        Obj = &_SHIP_BASIC;
+                        break;
+                case SHIP_ENEMY_1:
+                        velocity_x = 0.25;
+                        velocity_y = 0;
+                        strength = 10;
+                        Obj = &_SHIP_ENEMY_1;
+                        break;
+                case BULLET_1:
+                        velocity_x = 0;
+                        velocity_y = -1;
+                        strength = 10;
+                        Obj = &_BULLET_1;
+                        break;
+
+                default:
+                        Obj = nullptr;
+                        break;
+        }
+
+        //get dimensions
+        Obj->getDimensions(height, width);
+}
+
+ObjectList::object::~object()
+{
+        //clear memory
+        f_link = b_link = nullptr;
+        Obj = nullptr;
+}
+
+void ObjectList::object::drawObject()
+{
+        Obj->eraseObject(prev_y, prev_x, object::win);
+        Obj->drawObject(y, x, object::win);
+}
+void ObjectList::object::getDimensions(int &h, int &w)
+{
+        h = height;
+        w = width;
+}
 
 float ObjectList::object::getStrength(){
         return strength;
@@ -40,15 +98,15 @@ bool ObjectList::object::move()
 
         switch (type)
         {
-                case ObjectType::SHIP_BASIC:
+                case SHIP_BASIC:
                         prev_x = x;
                         x += velocity_x;
                         break;
-                case ObjectType::SHIP_ENEMY_1:
+                case SHIP_ENEMY_1:
                         prev_x = x;
                         x += velocity_x;
                         break;
-                case ObjectType::BULLET_1:
+                case BULLET_1:
                         prev_y = y;
                         y += velocity_y;
                         break;
@@ -123,7 +181,6 @@ void ObjectList::object::interact(object *obj)
 }
 
 
-
 //objectList method definitions
 
 ObjectList::ObjectList(WINDOW *window) : front(nullptr), back(nullptr), drawWindow(window)
@@ -168,11 +225,11 @@ void ObjectList::newObject(OBJECT_TYPES type, float x, float y)
         }
         back = newObj;
 
-        if (type == ObjectType::SHIP_BASIC) //replace with player
+        if (type == SHIP_BASIC) //replace with player
                 player = newObj;
 }
 
-ObjectList::object *ObjectList::deleteObject(object *ptr)
+ObjectList::object *ObjectList::deleteObject(ObjectList::object *ptr)
 {
         //will implement after 1 ship trial
         ptr->deleted();
